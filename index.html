@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CR7 Career Archive - 크리스티아누 호날두 시즌별 평가</title>
+  <style>
+    :root {
+      --bg-color: #0f172a;
+      --card-bg: #1e293b;
+      --accent-gold: #fbbf24;
+      --accent-red: #ef4444;
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --border-color: #334155;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: 'Pretendard', -apple-system, BlinkMacSystemFont, system-ui, Roboto, sans-serif;
+    }
+
+    body {
+      background-color: var(--bg-color);
+      color: var(--text-main);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 960px;
+    }
+
+    /* Header */
+    header {
+      text-align: center;
+      padding: 30px 10px;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 24px;
+    }
+
+    header h1 {
+      font-size: 2.2rem;
+      color: var(--accent-gold);
+      margin-bottom: 8px;
+    }
+
+    header p {
+      color: var(--text-muted);
+      font-size: 1rem;
+    }
+
+    /* Controls */
+    .controls {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+      margin-bottom: 24px;
+    }
+
+    .tabs {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      padding-bottom: 8px;
+    }
+
+    .tab-btn {
+      background-color: var(--card-bg);
+      color: var(--text-muted);
+      border: 1px solid var(--border-color);
+      padding: 10px 16px;
+      border-radius: 20px;
+      cursor: pointer;
+      white-space: nowrap;
+      font-weight: bold;
+      transition: all 0.2s;
+    }
+
+    .tab-btn.active, .tab-btn:hover {
+      background-color: var(--accent-gold);
+      color: #000;
+      border-color: var(--accent-gold);
+    }
+
+    .filter-bar {
+      display: flex;
+      gap: 12px;
+      justify-content: space-between;
+      flex-wrap: wrap;
+    }
+
+    .search-input, .sort-select {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      color: var(--text-main);
+      padding: 10px 14px;
+      border-radius: 8px;
+      font-size: 0.95rem;
+    }
+
+    .search-input {
+      flex: 1;
+      min-width: 200px;
+    }
+
+    /* Season Grid / Cards */
+    .season-list {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 20px;
+    }
+
+    .card {
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: 16px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+      transition: transform 0.2s, box-shadow 0.2s;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow: 0 10px 20px rgba(0,0,0,0.5);
+      border-color: var(--accent-gold);
+    }
+
+    .card-image-container {
+      width: 100%;
+      height: 200px;
+      background-color: #020617;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card-image-container img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: top;
+      transition: transform 0.3s;
+    }
+
+    .card:hover .card-image-container img {
+      transform: scale(1.05);
+    }
+
+    .card-body {
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      flex: 1;
+    }
+
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .season-title {
+      font-size: 1.3rem;
+      font-weight: bold;
+    }
+
+    .club-tag {
+      font-size: 0.8rem;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #334155;
+      color: var(--accent-gold);
+      font-weight: 600;
+    }
+
+    .rating-badge {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background-color: rgba(251, 191, 36, 0.1);
+      border: 1px solid var(--accent-gold);
+      padding: 8px 12px;
+      border-radius: 10px;
+    }
+
+    .rating-score {
+      font-size: 1.5rem;
+      font-weight: 800;
+      color: var(--accent-gold);
+    }
+
+    .rating-label {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 8px;
+      background: #0f172a;
+      padding: 10px;
+      border-radius: 8px;
+      text-align: center;
+    }
+
+    .stat-item .val {
+      font-size: 1.1rem;
+      font-weight: bold;
+    }
+
+    .stat-item .lbl {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+    }
+
+    .card-desc {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      line-height: 1.45;
+      border-top: 1px solid var(--border-color);
+      padding-top: 10px;
+      margin-top: auto;
+    }
+
+    /* Footer */
+    footer {
+      text-align: center;
+      margin-top: 40px;
+      color: var(--text-muted);
+      font-size: 0.85rem;
+      padding: 20px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <header>
+      <h1>CRISTIANO RONALDO</h1>
+      <p>2002년 데뷔부터 현재까지 시즌별 총 출장 & 평가 Archive</p>
+    </header>
+
+    <div class="controls">
+      <div class="tabs" id="club-tabs">
+        <button class="tab-btn active" onclick="filterClub('ALL')">전체 보기</button>
+        <button class="tab-btn" onclick="filterClub('Sporting CP')">스포르팅 CP</button>
+        <button class="tab-btn" onclick="filterClub('Man United')">맨체스터 유나이티드</button>
+        <button class="tab-btn" onclick="filterClub('Real Madrid')">레알 마드리드</button>
+        <button class="tab-btn" onclick="filterClub('Juventus')">유벤투스</button>
+        <button class="tab-btn" onclick="filterClub('Al Nassr')">알 나스르</button>
+      </div>
+
+      <div class="filter-bar">
+        <input type="text" id="search-input" class="search-input" placeholder="시즌 검색 (예: 2007-08)..." oninput="renderApp()">
+        <select id="sort-select" class="sort-select" onchange="renderApp()">
+          <option value="NEWEST">최신순</option>
+          <option value="RATING">최고 평점순</option>
+          <option value="GOALS">최다 득점순</option>
+          <option value="MATCHES">최다 출장순</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="season-list" id="season-list">
+      <!-- 시즌 데이터 동적 생성 -->
+    </div>
+
+    <footer>
+      <p>Cristiano Ronaldo Career Archive &copy; 2026</p>
+    </footer>
+  </div>
+
+  <script>
+    // 호날두 2002-03 데뷔 시즌부터 전 대회 통합 스탯 및 이미지 데이터
+    const seasonData = [
+      {
+        season: "2024-25",
+        club: "Al Nassr",
+        rating: 7.92,
+        matches: 41, // 공식전 총 출장
+        goals: 35,
+        assists: 4,
+        img: "https://images.unsplash.com/photo-1579952363873-27f3bade9f55?w=500&auto=format&fit=crop",
+        desc: "사우디 리그 및 AFC 챔피언스리그 포함 공식전 출장. 여전한 골 감각 유지."
+      },
+      {
+        season: "2023-24",
+        club: "Al Nassr",
+        rating: 8.12,
+        matches: 51,
+        goals: 50,
+        assists: 13,
+        desc: "사우디 프로리그 단일 시즌 최다골(35골) 경신 및 전 대회 50골 폭발."
+      },
+      {
+        season: "2021-22",
+        club: "Man United",
+        rating: 7.32,
+        matches: 38,
+        goals: 24,
+        assists: 3,
+        desc: "맨유 복귀 첫 시즌. 팀 내 최고 득점자이자 EPL 득점 3위로 에이스 역할 고수."
+      },
+      {
+        season: "2020-21",
+        club: "Juventus",
+        rating: 7.68,
+        matches: 44,
+        goals: 36,
+        assists: 4,
+        desc: "세리에 A 득점왕 등극 및 코파 이탈리아 우승. 유벤투스 공격의 완벽한 중심."
+      },
+      {
+        season: "2019-20",
+        club: "Juventus",
+        rating: 7.82,
+        matches: 46,
+        goals: 37,
+        assists: 7,
+        desc: "세리에 A 11경기 연속 골 기록 달성. 단일 시즌 유벤투스 최다 골 신기록."
+      },
+      {
+        season: "2017-18",
+        club: "Real Madrid",
+        rating: 8.05,
+        matches: 44,
+        goals: 44,
+        assists: 8,
+        desc: "UCL 3연속 우승 대기록 달성. 챔피언스리그 15골을 몰아치며 전무후무한 역사 집행."
+      },
+      {
+        season: "2016-17",
+        club: "Real Madrid",
+        rating: 8.24,
+        matches: 46,
+        goals: 42,
+        assists: 12,
+        desc: "라리가 및 UCL 더블 달성. 챔스 토너먼트 바이에른 뮌헨-아틀레티코-유벤투스 연쇄 파괴."
+      },
+      {
+        season: "2014-15",
+        club: "Real Madrid",
+        rating: 8.48,
+        matches: 54,
+        goals: 61,
+        assists: 22,
+        desc: "개인 커리어 단일 시즌 최다골(61골). 라리가 48골로 득점왕 및 득점 기계의 정점 연출."
+      },
+      {
+        season: "2013-14",
+        club: "Real Madrid",
+        rating: 8.27,
+        matches: 47,
+        goals: 51,
+        assists: 15,
+        desc: "레알 마드리드 '라 데시마(10번째 UCL 우승)' 완성. 단일 UCL 시즌 최다 17골 신기록."
+      },
+      {
+        season: "2011-12",
+        club: "Real Madrid",
+        rating: 8.28,
+        matches: 55,
+        goals: 60,
+        assists: 15,
+        desc: "승점 100점 라리가 우승 견인. 압도적 스피드와 전천후 득점력의 피지컬 피크 시즌."
+      },
+      {
+        season: "2007-08",
+        club: "Man United",
+        rating: 8.35,
+        matches: 49,
+        goals: 42,
+        assists: 8,
+        desc: "첫 발롱도르 및 더블(EPL, UCL) 달성. 윙어로 출발하여 세계 축구 정상 등극."
+      },
+      {
+        season: "2003-04",
+        club: "Man United",
+        rating: 7.20,
+        matches: 40,
+        goals: 6,
+        assists: 9,
+        desc: "맨유 이적 첫 시즌. FA컵 결승전 선제골 포함 혜성같이 등장한 10대 천재 윙어."
+      },
+      {
+        season: "2002-03",
+        club: "Sporting CP",
+        rating: 6.90,
+        matches: 31,
+        goals: 5,
+        assists: 6,
+        desc: "프로 데뷔 시즌. 스포르팅 1군에 연착륙하며 알렉스 퍼거슨 감독의 눈도장을 받음."
+      }
+    ];
+
+    let currentClub = 'ALL';
+
+    function filterClub(club) {
+      currentClub = club;
+      const buttons = document.querySelectorAll('.tab-btn');
+      buttons.forEach(btn => {
+        if(btn.innerText.includes(club) || (club === 'ALL' && btn.innerText.includes('전체'))) {
+          btn.classList.add('active');
+        } else {
+          btn.classList.remove('active');
+        }
+      });
+      renderApp();
+    }
+
+    function renderApp() {
+      const searchVal = document.getElementById('search-input').value.toLowerCase();
+      const sortVal = document.getElementById('sort-select').value;
+      const listContainer = document.getElementById('season-list');
+
+      // Filter
+      let filtered = seasonData.filter(item => {
+        const matchClub = currentClub === 'ALL' || item.club === currentClub;
+        const matchSearch = item.season.toLowerCase().includes(searchVal) || item.club.toLowerCase().includes(searchVal);
+        return matchClub && matchSearch;
+      });
+
+      // Sort
+      filtered.sort((a, b) => {
+        if (sortVal === 'RATING') return b.rating - a.rating;
+        if (sortVal === 'GOALS') return b.goals - a.goals;
+        if (sortVal === 'MATCHES') return b.matches - a.matches;
+        return b.season.localeCompare(a.season); // NEWEST
+      });
+
+      // Render HTML
+      listContainer.innerHTML = '';
+      if(filtered.length === 0) {
+        listContainer.innerHTML = `<div style="grid-column: 1/-1; text-align: center; color: var(--text-muted); padding: 40px;">조건에 일치하는 시즌 데이터가 없습니다.</div>`;
+        return;
+      }
+
+      filtered.forEach(item => {
+        const card = document.createElement('div');
+        card.className = 'card';
+        card.innerHTML = `
+          <div class="card-image-container">
+            <img src="${item.img}" alt="${item.club} ${item.season}" loading="lazy">
+          </div>
+          <div class="card-body">
+            <div class="card-header">
+              <span class="season-title">${item.season}</span>
+              <span class="club-tag">${item.club}</span>
+            </div>
+            
+            <div class="rating-badge">
+              <div class="rating-score">${item.rating.toFixed(2)}</div>
+              <div class="rating-label">시즌 평균 평점</div>
+            </div>
+
+            <div class="stats-grid">
+              <div class="stat-item">
+                <div class="val">${item.matches}</div>
+                <div class="lbl">총 출장수</div>
+              </div>
+              <div class="stat-item">
+                <div class="val" style="color: var(--accent-gold);">${item.goals}</div>
+                <div class="lbl">총 득점</div>
+              </div>
+              <div class="stat-item">
+                <div class="val">${item.assists}</div>
+                <div class="lbl">도움</div>
+              </div>
+            </div>
+
+            <div class="card-desc">${item.desc}</div>
+          </div>
+        `;
+        listContainer.appendChild(card);
+      });
+    }
+
+    // App 초기화
+    window.onload = () => {
+      renderApp();
+    };
+  </script>
+</body>
+</html>
